@@ -53,7 +53,14 @@ const Contact: React.FC = () => {
                 />
               </div>
             </div>
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              className="space-y-4"
+            >
+              {/* Netlify form hidden input */}
+              <input type="hidden" name="form-name" value="contact" />
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                   Name
@@ -61,6 +68,7 @@ const Contact: React.FC = () => {
                 <input
                   type="text"
                   id="name"
+                  name="name"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
               </div>
@@ -71,6 +79,7 @@ const Contact: React.FC = () => {
                 <input
                   type="email"
                   id="email"
+                  name="email"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
               </div>
@@ -80,6 +89,7 @@ const Contact: React.FC = () => {
                 </label>
                 <textarea
                   id="message"
+                  name="message"
                   rows={4}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 ></textarea>
