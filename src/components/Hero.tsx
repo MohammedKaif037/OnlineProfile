@@ -16,9 +16,9 @@ const Hero = () => {
               Specialized in Spring Boot, Microservices, and Cloud Technologies.
             </p>
             <div className="flex space-x-4">
-              <SocialLink href="https://github.com" icon={<Github />} />
-              <SocialLink href="https://linkedin.com" icon={<Linkedin />} />
-              <SocialLink href="mailto:your.email@example.com" icon={<Mail />} />
+              <SocialLink href="https://github.com/mohammedkaif037" icon={<Github />} />
+              <SocialLink href="https://linkedin.com/in/mohammed-kaif" icon={<Linkedin />} />
+              <SocialLink href="mailto:kaifmohammed037@gmail.com"icon={<Mail />} />
             </div>
           </div>
           <div className="md:w-1/2">
