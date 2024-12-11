@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Mail, Linkedin, Github } from 'lucide-react';
+import { Box, Button, Container, Heading } from '@chakra-ui/react';
 
 interface ContactInfoProps {
   icon: React.ReactNode;
   text: string;
   href: string;
+}
+
+interface FormData {
+  name: string;
+  email: string;
+  message: string;
 }
 
 const ContactInfo: React.FC<ContactInfoProps> = ({ icon, text, href }) => (
@@ -20,22 +27,75 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ icon, text, href }) => (
 );
 
 const Contact: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          'form-name': 'contact',
+          ...formData
+        }).toString()
+      });
+
+      if (response.ok) {
+        setShowSuccess(true);
+        setFormData({ name: '', email: '', message: '' });
+        setTimeout(() => setShowSuccess(false), 5000); // Hide success message after 5 seconds
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
   return (
-    <section id="contact" className="py-16">
-      <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
+    <section id="contact" className="py-16 relative">
+      <Container maxW="container.md" centerContent>
+        <Heading as="h2" size="xl" textAlign="center" mb={12}>
           Get In Touch
-        </h2>
-        <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+        </Heading>
+        <Box maxW="4xl" mx="auto">
+          {showSuccess && (
+            <div
+              style={{
+                padding: '1rem',
+                marginBottom: '1rem',
+                backgroundColor: '#d4edda',
+                color: '#155724',
+                border: '1px solid #c3e6cb',
+                borderRadius: '4px',
+              }}
+            >
+              <strong>Success!</strong> Your message has been sent successfully. I'll get back to you soon!
+            </div>
+          )}
+          <Box display={{ base: 'block', md: 'grid' }} gridTemplateColumns={{ md: '1fr 1fr' }} gap={8}>
+            <Box mb={6}>
+              <Heading as="h3" size="lg" mb={4}>
                 Let's Connect
-              </h3>
-              <p className="text-gray-600">
+              </Heading>
+              <p>
                 Feel free to reach out for collaborations, project discussions, or just a chat. I am always open to connecting with like-minded professionals.
               </p>
-              <div className="space-y-4">
+              <Box mt={4}>
                 <ContactInfo
                   icon={<Mail />}
                   text="kaifmohammed037@gmail.com"
@@ -51,49 +111,81 @@ const Contact: React.FC = () => {
                   text="GitHub Profile"
                   href="https://github.com/mohammedkaif037"
                 />
-              </div>
-            </div>
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Name
-                </label>
+              </Box>
+            </Box>
+            <form onSubmit={handleSubmit}>
+              <div style={{ marginBottom: '1rem' }}>
+                <label htmlFor="name">Name</label>
                 <input
-                  type="text"
                   id="name"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Your Name"
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    marginTop: '4px',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                  }}
                 />
               </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
+              <div style={{ marginBottom: '1rem' }}>
+                <label htmlFor="email">Email</label>
                 <input
                   type="email"
                   id="email"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Your Email"
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    marginTop: '4px',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                  }}
                 />
               </div>
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                  Message
-                </label>
+              <div style={{ marginBottom: '1rem' }}>
+                <label htmlFor="message">Message</label>
                 <textarea
                   id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder="Your Message"
                   rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                ></textarea>
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    marginTop: '4px',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                  }}
+                />
               </div>
               <button
                 type="submit"
-                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors duration-300"
+                disabled={isSubmitting}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  backgroundColor: '#007BFF',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                }}
               >
-                Send Message
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Container>
     </section>
   );
 };
