@@ -27,14 +27,8 @@ const Experience: React.FC = () => {
           <ExperienceCard
             role="Java Backend Developer"
             company="Airobosoft"
-            duration="Jan 2024 - Present"
+            duration="Nov 2022 - Present"
             description="Developed and maintained microservices for enterprise-level applications using Spring Boot and Hibernate."
-          />
-          <ExperienceCard
-            role="Full Stack Developer"
-            company="Freelance Projects"
-            duration="2023 - Present"
-            description="Created full-stack applications using MERN and Django, ensuring scalability and user-friendly interfaces."
           />
         </div>
       </div>
