@@ -20,24 +20,6 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ icon, text, href }) => (
 );
 
 const Contact: React.FC = () => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-
-    const data = new FormData(form);
-
-    // Use Netlify's fetch to submit the form data
-    fetch("/", {
-      method: "POST",
-      body: new URLSearchParams(data as any),
-    })
-      .then(() => {
-        alert("Thank you! Your message has been successfully sent.");
-        form.reset(); // Reset the form after submission
-      })
-      .catch((error) => console.error(error));
-  };
-
   return (
     <section id="contact" className="py-16">
       <div className="container mx-auto px-6">
@@ -53,7 +35,6 @@ const Contact: React.FC = () => {
               <p className="text-gray-600">
                 Feel free to reach out for collaborations, project discussions, or just a chat.
               </p>
-              {/* Contact Information */}
               <div className="space-y-4">
                 <ContactInfo
                   icon={<Mail />}
@@ -76,7 +57,6 @@ const Contact: React.FC = () => {
               name="contact"
               method="POST"
               data-netlify="true"
-              onSubmit={handleSubmit}
               className="space-y-4"
             >
               <input type="hidden" name="form-name" value="contact" />
