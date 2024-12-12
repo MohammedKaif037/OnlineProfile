@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Mail, Linkedin, Github } from 'lucide-react';
 
 interface ContactInfoProps {
@@ -20,6 +20,49 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ icon, text, href }) => (
 );
 
 const Contact: React.FC = () => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const encode = (data: { [key: string]: string }) => {
+    return Object.keys(data)
+      .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+      .join("&");
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const data: { [key: string]: string } = {};
+    formData.forEach((value, key) => {
+      data[key] = value.toString();
+    });
+
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode({
+          "form-name": "contact",
+          ...data
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Form submission failed: ${response.status}`);
+      }
+
+      alert("Thank you! Your message has been successfully sent.");
+      form.reset();
+    } catch (error) {
+      console.error("Form submission error:", error);
+      alert("Sorry, there was a problem submitting your message. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="py-16">
       <div className="container mx-auto px-6">
@@ -57,9 +100,16 @@ const Contact: React.FC = () => {
               name="contact"
               method="POST"
               data-netlify="true"
+              netlify-honeypot="bot-field"
+              onSubmit={handleSubmit}
               className="space-y-4"
             >
               <input type="hidden" name="form-name" value="contact" />
+              <p className="hidden">
+                <label>
+                  Don't fill this out if you're human: <input name="bot-field" />
+                </label>
+              </p>
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                   Name
@@ -98,9 +148,10 @@ const Contact: React.FC = () => {
               </div>
               <button
                 type="submit"
-                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors duration-300"
+                disabled={submitting}
+                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors duration-300 disabled:opacity-50"
               >
-                Send Message
+                {submitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </div>
