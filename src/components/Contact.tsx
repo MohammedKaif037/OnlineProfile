@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Linkedin, Github } from 'lucide-react';
+import Toast from './Toast'; // Adjust the import path as needed
 
 interface ContactInfoProps {
   icon: React.ReactNode;
@@ -21,11 +22,14 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ icon, text, href }) => (
 
 const Contact: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState<'success' | 'error'>('success');
 
   const encode = (data: { [key: string]: string }) => {
     return Object.keys(data)
-      .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-      .join("&");
+      .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+      .join('&');
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -40,24 +44,31 @@ const Contact: React.FC = () => {
     });
 
     try {
-      const response = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: encode({
-          "form-name": "contact",
-          ...data
-        })
+          'form-name': 'contact',
+          ...data,
+        }),
       });
 
       if (!response.ok) {
         throw new Error(`Form submission failed: ${response.status}`);
       }
 
-      alert("Thank you! Your message has been successfully sent.");
+      // Show success toast
+      setToastMessage('Thank you! Your message has been successfully sent.');
+      setToastType('success');
+      setToastVisible(true);
       form.reset();
     } catch (error) {
-      console.error("Form submission error:", error);
-      alert("Sorry, there was a problem submitting your message. Please try again.");
+      console.error('Form submission error:', error);
+
+      // Show error toast
+      setToastMessage('Sorry, there was a problem submitting your message. Please try again.');
+      setToastType('error');
+      setToastVisible(true);
     } finally {
       setSubmitting(false);
     }
@@ -157,6 +168,14 @@ const Contact: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Toast Component */}
+      <Toast
+        message={toastMessage}
+        type={toastType}
+        isVisible={toastVisible}
+        onClose={() => setToastVisible(false)}
+      />
     </section>
   );
 };
