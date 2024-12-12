@@ -45,7 +45,7 @@ const Projects: React.FC = () => {
             description="A functional movie web application with browsing and search for movies."
             link="https://github.com/MohammedKaif037/MovieApp"
             techStack="HTML, CSS, Bootstrap, JavaScript, TMDB API"
-            demoLink="http://projectx.great-site.net/"
+            demoLink="https://movie-web-site-apijs.netlify.app/"
           />
           <ProjectCard
             title="AniList API App"
