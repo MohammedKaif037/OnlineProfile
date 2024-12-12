@@ -18,6 +18,7 @@ const Footer = () => {
           <div className="flex space-x-6 mt-4 md:mt-0">
             <FooterLink href="#about">About</FooterLink>
             <FooterLink href="#experience">Experience</FooterLink>
+            <FooterLink href="#certifications">Certifications</FooterLink>
             <FooterLink href="#projects">Projects</FooterLink>
             <FooterLink href="#contact">Contact</FooterLink>
           </div>
