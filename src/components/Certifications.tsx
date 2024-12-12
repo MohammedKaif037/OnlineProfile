@@ -15,8 +15,9 @@ const Certifications = () => {
   return (
     <section id="certifications" className="bg-light py-5">
       <div className="container">
-        <h2 className="text-center mb-4">Certifications</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
+          Certifications
+        </h2>        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {certifications.map((cert, index) => (
             <div key={index} className="card p-4 shadow hover:shadow-md transition-shadow duration-200">
               <a
